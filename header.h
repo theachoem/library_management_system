@@ -69,6 +69,14 @@ DATA *init_array(){
 
     for (i = 0; i < capacity; i++){
         array[i].value = 0;
+        strcpy(array[i].title, "0");
+        strcpy(array[i].isbn, "0");
+        strcpy(array[i].author1, "0");
+        strcpy(array[i].author2, "0");
+        strcpy(array[i].author3, "0");
+        array[i].year = 0;
+        array[i].cp = 0;
+        store_index[i] = 0;
     }
     return array;
 }
@@ -101,8 +109,26 @@ void insert(DATA *array, char isbn[20], char title[50], char author1[50], char a
 }
 
 void remove_data(DATA *array, int index){
+    int k = 0, i;
+    for(i=0; i<size; i++){
+        if(store_index[i] == hash_string(array[index].title)){
+            k = i; i = size - 1;
+        }
+    }
+    printf("  INDEX : %d", k);
     array[index].value = 0;
+    array[index].value = 0;
+    strcpy(array[index].title, "0");
+    strcpy(array[index].isbn, "0");
+    strcpy(array[index].author1, "0");
+    strcpy(array[index].author2, "0");
+    strcpy(array[index].author3, "0");
+    array[index].year = 0;
+    array[index].cp = 0;
     size --;
+    for(i=k; i<size; i++){
+        store_index[i] = store_index[i+1];
+    }
 }
 
 int size_of_hashtable(DATA *array){

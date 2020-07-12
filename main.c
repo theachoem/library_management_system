@@ -134,7 +134,7 @@ void add_new_book(DATA *array){
 }
 
 void modify_book(DATA *array){
-    int year, cp;
+    int year = 0, cp;
     char isbn[20], title[50];
     char author[50];
 
@@ -169,14 +169,21 @@ void modify_book(DATA *array){
             if(c2 == 3) strcpy(array[index].author3, author);
         break;
         case 3:
-            printf("  Enter new ISBN: ");
-            scanf("%s", &isbn);
+            strcpy(isbn, "0");
+            do{
+                if(strcmp(isbn, "0")) printf("  Invalid ISBN!");
+                printf("\n  Enter new ISBN: ");
+                scanf("%s", &isbn);
+            } while(!is_valid_isbn(isbn));
             remove_data(array, index);
             insert(array, isbn, array[index].title, array[index].author1, array[index].author2, array[index].author3, array[index].year, array[index].cp);
         break;
         case 4:
-            printf("  Enter new published year: ");
-            scanf("%d", &year);
+            do{
+                if(year != 0) printf("  Invalid year!");
+                printf("\n  Enter update of published year: ");
+                scanf("%d", &year);
+            } while(year < 1500);
             array[index].year = year;
         break;
         case 5:
@@ -191,7 +198,7 @@ void modify_book(DATA *array){
 }
 
 void delete_book(DATA *array){
-    char isbn[20];
+    char isbn[20], c1;
     printf("\n  Enter ISBN: ");
     scanf("%s", &isbn);
     int isbn_key = hash_string(isbn);
@@ -199,9 +206,7 @@ void delete_book(DATA *array){
     if(array[index].value == 0){
         printf("  ISBN not found!\n");
         return;
-    }
-    else{
-        char c1;
+    } else{
         printf("  Are you sure to delete(Y/n): ");
         scanf("%s", &c1);
         if(c1 == 'Y'){
@@ -213,22 +218,6 @@ void delete_book(DATA *array){
     save_file(array, "dataTMP.txt");
 }
 
-
-void list_books(DATA *array){
-    int i, index;
-    char tmp[50], t;
-    for (i = 0; i < size; i++){
-        index = store_index[i];
-        if(array[index].value == 1) printf("  ISBN: %s - title: %s\n", array[index].isbn, add_space(array[index].title));
-    }
-    printf("\n");
-    again:
-    printf("  Do you want to detail a book(Y/n): ");
-    scanf("%s", &t);
-    if(t == 'Y') search_book_hashing(array);
-    else if(t == 'n') return;
-    else goto again;
-}
 
 void sort_books(DATA *array){
     char isbn[20];
@@ -264,6 +253,22 @@ void sort_books(DATA *array){
     }
     DATA *array2 = array;
     save_sort(array2);
+}
+
+void list_books(DATA *array){
+    int i, index;
+    char tmp[50], t;
+    for (i = 0; i < size; i++){
+        index = store_index[i];
+        if(array[index].value == 1) printf("  ISBN: %s - title: %s, %d\n", array[index].isbn, add_space(array[index].title), array[index].value);
+    }
+    printf("\n");
+    again:
+    printf("  Do you want to detail a book(Y/n): ");
+    scanf("%s", &t);
+    if(t == 'Y') search_book_hashing(array);
+    else if(t == 'n') return;
+    else goto again;
 }
 
 void search_book_hashing(DATA *array){
