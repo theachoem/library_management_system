@@ -109,16 +109,16 @@ void add_new_book(DATA *array){
     printf("\n  Enter book title: ");
     gets(title); gets(title);
     printf("\n  Enter name of author 1: ");
-    scanf("%s", &author1);
+    gets(author1);
     printf("\n  Enter name of author 2: ");
-    scanf("%s", &author2);
+    gets(author2);
     printf("\n  Enter name of author 3: ");
-    scanf("%s", &author3);
+    gets(author3);
     printf("\n  Enter year of publication: ");
     scanf("%d", &year);
     printf("\n  Enter number of copies: ");
-    scanf("%d", &year);
-    insert(array, isbn, remove_space(title), author1, author2, author3, year, cp);
+    scanf("%d", &cp);
+    insert(array, isbn, remove_space(title), remove_space(author1), remove_space(author2), remove_space(author3), year, cp);
     save_file(array, "dataTMP.txt");
 }
 
@@ -202,21 +202,15 @@ void delete_book(DATA *array){
     save_file(array, "dataTMP.txt");
 }
 
+
 void list_books(DATA *array){
     int i, index;
-    char tmp[50];
+    char tmp[50], t;
     for (i = 0; i < size; i++){
         index = store_index[i];
-        if(array[index].value == 1){
-            strcpy(tmp, array[index].title);
-            for(int k=0; k<strlen(tmp); k++){
-                if(tmp[k] == '_') tmp[k] = ' ';
-            }
-            printf("  ISBN: %s - title: %s\n", array[index].isbn, tmp);
-        }
+        if(array[index].value == 1) printf("  ISBN: %s - title: %s\n", array[index].isbn, add_space(array[index].title));
     }
     printf("\n");
-    char t;
     again:
     printf("  Do you want to detail a book(Y/n): ");
     scanf("%s", &t);
@@ -226,7 +220,7 @@ void list_books(DATA *array){
 }
 
 void sort_books(DATA *array){
-    char isbn[20], c;
+    char isbn[20];
     int year, cp;
     char title[50];
     char author1[50];
@@ -236,85 +230,49 @@ void sort_books(DATA *array){
     char cmp1[50], cmp2[50];
 
     printf("  Do you want to sort by ISBN or TITLE? (1 or 2): ");
-    scanf("%s",&c);
-    int n,i,j, index, index1;
-    int isbn_key,isbn_key2, tmp_isbn;
+    scanf("%s",&sorted_check);
+    int i,j, index, index1;
+
     for(i=0; i<size; i++){
-        index = store_index[i];
         for(j=i+1; j<size; j++){
+            index = store_index[i];
             index1 = store_index[j];
-            if(c == '1'){
+            if(sorted_check == '1'){
                 strcpy(cmp1, array[index].isbn);
                 strcpy(cmp2, array[index1].isbn);
             }
-            if(c == '2'){
+            if(sorted_check == '2'){
                 strcpy(cmp1, array[index].title);
                 strcpy(cmp2, array[index1].title);
             }
             if(strcmp(cmp1, cmp2)>0 && array[index].value == 1 && array[index].value == 1){
-                /*store tmp data*/
-                strcpy(isbn, array[index].isbn);
-                strcpy(title, array[index].title);
-                strcpy(author1, array[index].author1);
-                strcpy(author2, array[index].author2);
-                strcpy(author3, array[index].author3);
-                year = array[index].year;
-                cp = array[index].cp;
-
-                strcpy(array[index].isbn, array[index1].isbn);
-                strcpy(array[index].title, array[index1].title);
-                strcpy(array[index].author1, array[index1].author1);
-                strcpy(array[index].author2, array[index1].author2);
-                strcpy(array[index].author3, array[index1].author3);
-                array[index].cp = array[index1].cp;
-                array[index].year = array[index1].year;
-
-                strcpy(array[index1].isbn, isbn);
-                strcpy(array[index1].title, title);
-                strcpy(array[index1].author1, author1);
-                strcpy(array[index1].author2, author2);
-                strcpy(array[index1].author3, author3);
-                array[index1].year = year;
-                array[index1].cp = cp;
-//                index_s1 = hash_string(array[index].isbn);
-//                index_s2 = hash_string(array[index1].isbn);
-//                store_index[j] = index;
-//                store_index[i] = index1;
+                store_index[i] = store_index[j];
+                store_index[j] = index;
             }
         }
     }
-    save_file(array, "sort_array.txt");
-    printf("  Program will be restart soon!");
-    long long k = 100000000;
-    for(int t=0; t<k; t++){
-        if(t == k/10000) printf(". ");
-        if(t == k/100) printf(". ");
-        if(t == k/10) printf(". ");
-    }
-    printf("\n  PROGRAM RESTARTED!");
-    exit(0);
+    DATA *array2 = array;
+    save_sort(array2);
 }
 
 void search_book_hashing(DATA *array){
     char title[50];
     printf("  Enter book title: ");
     gets(title); gets(title);
-    for(int i=0; i<strlen(title); i++){
-        if(title[i]== ' ') title[i] = '_';
-    }
-    int index = hash_string(title);
+    int index = hash_string(remove_space(title));
     if(array[index].value == 0){
         printf("  Book not found!\n");
         return;
     }
-    printf("\n  | Title: %s\n", array[index].title);
-    printf("  | Authur: %s\n", array[index].author1);
-    printf("  | Authur 2: %s\n", array[index].author2);
-    printf("  | Authur 3: %s\n", array[index].author3);
+    printf("\n  | Title: %s\n", add_space(array[index].title));
+    printf("  | Authur 1: %s\n", add_space(array[index].author1));
+    printf("  | Authur 2: %s\n", add_space(array[index].author2));
+    printf("  | Authur 3: %s\n", add_space(array[index].author3));
     printf("  | ISBN: %s\n", array[index].isbn);
     printf("  | Year Publishes: %d\n", array[index].year);
     printf("  | Number of copies: %d\n", array[index].cp);
 }
+
 
 void list_books_later(DATA *array){
     int year, index;
@@ -323,12 +281,7 @@ void list_books_later(DATA *array){
     scanf("%d", &year);
     for (int i = 0; i < size; i++){
         index = store_index[i];
-        if (array[index].year >= year && array[index].value == 1){
-            strcpy(tmp, array[index].title);
-            for(int k=0; k<strlen(tmp); k++){
-                if(tmp[k] == '_') tmp[k] = ' ';
-            }
-            printf("  Year: %d - title: %s\n",array[index].year ,tmp);
-        }
+        if (array[index].year >= year && array[index].value == 1)
+            printf("  Year: %d - title: %s\n",array[index].year ,add_space(array[index].title));
     }
 }

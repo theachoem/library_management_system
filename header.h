@@ -20,6 +20,7 @@ typedef struct data{
 int capacity = 1000;
 int *store_index;
 int size = 0;
+char sorted_check = '0';
 
 void save_file(DATA *array, char path[50]);
 void load_file(DATA *array, char path[50]);
@@ -67,7 +68,6 @@ DATA *init_array(){
     DATA *array = (DATA*) malloc(capacity * sizeof(DATA));
     store_index = malloc(capacity * sizeof(int));
 
-    printf("CAP :%d", capacity);
     for (i = 0; i < capacity; i++){
         array[i].key = 0;
         array[i].value = 0;
@@ -79,7 +79,6 @@ DATA *init_array(){
 void insert(DATA *array, char isbn[20], char title[50], char author1[50], char author2[50], char author3[50], int year, int cp){
     int index = hash_string(title);
     int isbn_key = hash_string(isbn);
-//    printf("ISBN: %d\n", isbn_key);
     if (array[index].value == 0){
         array[index].value = 1;
         array[isbn_key].isbn_key = index;
@@ -141,4 +140,69 @@ char *remove_space(char str[]){
         if(str[i]== ' ') str[i] = '_';
     }
     return str;
+}
+
+char *add_space(char str[]){
+    for(int i=0; i<strlen(str); i++){
+        if(str[i]== '_') str[i] = ' ';
+    }
+    return str;
+}
+
+void save_sort(DATA *array){
+    char isbn[20], c;
+    int year, cp;
+    char title[50];
+    char author1[50];
+    char author2[50];
+    char author3[50];
+
+    char cmp1[50], cmp2[50];
+
+    int i,j, index, index1;
+    int tmp;
+    for(i=0; i<size; i++){
+        for(j=i+1; j<size; j++){
+            index = store_index[i];
+            index1 = store_index[j];
+            if(sorted_check == '1'){
+                strcpy(cmp1, array[index].isbn);
+                strcpy(cmp2, array[index1].isbn);
+            }
+            if(sorted_check == '2'){
+                strcpy(cmp1, array[index].title);
+                strcpy(cmp2, array[index1].title);
+            }
+            if(sorted_check == '0') return;
+            if(strcmp(cmp1, cmp2)>0 && array[index].value == 1 && array[index].value == 1){
+                /*store tmp data*/
+                strcpy(isbn, array[index].isbn);
+                strcpy(title, array[index].title);
+                strcpy(author1, array[index].author1);
+                strcpy(author2, array[index].author2);
+                strcpy(author3, array[index].author3);
+                year = array[index].year;
+                cp = array[index].cp;
+
+                /* copy all data from index[i+1] to index[i] */
+                strcpy(array[index].isbn, array[index1].isbn);
+                strcpy(array[index].title, array[index1].title);
+                strcpy(array[index].author1, array[index1].author1);
+                strcpy(array[index].author2, array[index1].author2);
+                strcpy(array[index].author3, array[index1].author3);
+                array[index].cp = array[index1].cp;
+                array[index].year = array[index1].year;
+
+                /* copy from temporary data to index[i] */
+                strcpy(array[index1].isbn, isbn);
+                strcpy(array[index1].title, title);
+                strcpy(array[index1].author1, author1);
+                strcpy(array[index1].author2, author2);
+                strcpy(array[index1].author3, author3);
+                array[index1].year = year;
+                array[index1].cp = cp;
+            }
+        }
+    }
+    save_file(array, "sort_array.txt");
 }
