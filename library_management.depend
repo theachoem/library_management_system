@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1594440365 source:s:\edu\term3\advanced algorithm and data structure\library_management\main.c
+	<stdio.h>
+	<stdlib.h>
+	"header.h"
+
+1594440522 s:\edu\term3\advanced algorithm and data structure\library_management\header.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+
