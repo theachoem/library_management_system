@@ -5,7 +5,6 @@
 #include <math.h>
 
 typedef struct data{
-    int key;
     int value;
     int isbn_key;
     char isbn[20];
@@ -69,7 +68,6 @@ DATA *init_array(){
     store_index = malloc(capacity * sizeof(int));
 
     for (i = 0; i < capacity; i++){
-        array[i].key = 0;
         array[i].value = 0;
     }
     return array;
@@ -103,9 +101,7 @@ void insert(DATA *array, char isbn[20], char title[50], char author1[50], char a
 }
 
 void remove_data(DATA *array, int index){
-    array[index].key = 0;
     array[index].value = 0;
-
     size --;
 }
 
@@ -119,7 +115,7 @@ int is_valid_isbn(char isbn[]){
     if(isbn[9] == 'X' || ((isbn[9] - 48 >= 0) && (isbn[9] - 48 <= 9))){
         for(int i=0; i<10; i++){
             tmp = isbn[i] - 48;
-            if(i==9 && isbn[i] == 'X') sum += 10;
+            if(i == 9 && isbn[i] == 'X') sum += 10;
             else sum += tmp*j;
             j--;
         }
@@ -147,6 +143,18 @@ char *add_space(char str[]){
         if(str[i]== '_') str[i] = ' ';
     }
     return str;
+}
+
+bool if_file_empty(char path[50]){
+    FILE *f = fopen(path, "r");
+    int i=0;
+    int str[50];
+
+    while(fscanf(f, "%s\n", str)!= EOF){
+        i++;
+    }
+    if(i == 0) return true;
+    else return false;
 }
 
 void save_sort(DATA *array){

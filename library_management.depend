@@ -10,3 +10,16 @@
 	<string.h>
 	<math.h>
 
+1594552124 source:s:\edu\term3\advanced algorithm and data structure\library_management\library-management\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"header.h"
+
+1594553051 s:\edu\term3\advanced algorithm and data structure\library_management\library-management\header.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<math.h>
+

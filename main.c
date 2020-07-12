@@ -6,14 +6,15 @@
 int main(){
     DATA *array = init_array();
     char ch;
-    retry:
-    printf("  Which file do you want to load?\n  1. Main data\n  2. Main data (Sorted)\n  3. Unsave data\n");
-    printf("  Your choice: ");
-    scanf("%c", &ch);
-    if(ch == '1' || ch == 10) load_file(array, "data.txt");
-    else if(ch == '2') load_file(array, "sort_array.txt");
-    else if(ch == '3') load_file(array, "dataTMP.txt");
-    else goto retry;
+    if(!if_file_empty("dataTMP.txt")){
+        retry:
+        printf("  Do you want to load unsaved data? (Y/n): ");
+        scanf("%c", &ch);
+        if(ch == 'Y' || ch == 10 || ch == 'y') load_file(array, "dataTMP.txt");
+        else if(ch == 'n' || ch == 'N') load_file(array, "data.txt");
+        else goto retry;
+    }
+    else load_file(array, "data.txt");
 
     again1:
     printf("\n");
@@ -21,12 +22,12 @@ int main(){
     printf("        LIBRARY MANAGEMENT      \n");
     printf("  ==============================\n");
     printf("\n  1. Add new book to library.");
-    printf("\n  2. Modify a book.");
-    printf("\n  3. Delete a book.");
+    printf("\n  2. Modify a book (using ISBN).");
+    printf("\n  3. Delete a book (using ISBN).");
     printf("\n  4. List all books");
     printf("\n  5. Sort books by their titles.");
-    printf("\n  6. Search for a book.");
-    printf("\n  7. List books who published later by year.");
+    printf("\n  6. Search for a book (using title)");
+    printf("\n  7. List books which is published later (by year).");
     printf("\n  8. Save data to file.");
     printf("\n  9. Load data from file.");
     printf("\n  0. Exit\n");
@@ -93,19 +94,25 @@ void load_file(DATA *array, char path[50]){
     char author1[50], author2[50], author3[50];
 
     FILE *f = fopen(path, "r");
-    while(fscanf(f, "%s %s %s %s %s %d %d\n",&isbn, &title, &author1, &author2, &author3, &year, &cp)!= EOF){
-        insert(array, isbn, title, author1, author2, author3, year, cp);
+    while(fscanf(f, "%s %s %s %s %s %d %d\n", isbn, title, author1, author2, author3, &year, &cp)!= EOF){
+        if(is_valid_isbn(isbn))
+            insert(array, isbn, title, author1, author2, author3, year, cp);
     }
     save_file(array, "dataTMP.txt");
     printf("  DONE!\n");
 }
 
 void add_new_book(DATA *array){
-    int key, year, cp;
+    int key, year = 0, cp;
     char isbn[20], title[50];
     char author1[50], author2[50], author3[50];
-    printf("\n  Enter ISBN: ");
-    scanf("%s", &isbn);
+    strcpy(isbn, "0");
+    do{
+        if(strcmp(isbn, "0")) printf("  Invalid ISBN!");
+        printf("\n  Enter ISBN: ");
+        scanf("%s", &isbn);
+    } while(!is_valid_isbn(isbn));
+
     printf("\n  Enter book title: ");
     gets(title); gets(title);
     printf("\n  Enter name of author 1: ");
@@ -114,8 +121,12 @@ void add_new_book(DATA *array){
     gets(author2);
     printf("\n  Enter name of author 3: ");
     gets(author3);
-    printf("\n  Enter year of publication: ");
-    scanf("%d", &year);
+    do{
+        if(year != 0) printf("  Invalid year!");
+        printf("\n  Enter year of publication: ");
+        scanf("%d", &year);
+    } while(year < 1500);
+
     printf("\n  Enter number of copies: ");
     scanf("%d", &cp);
     insert(array, isbn, remove_space(title), remove_space(author1), remove_space(author2), remove_space(author3), year, cp);
@@ -272,7 +283,6 @@ void search_book_hashing(DATA *array){
     printf("  | Year Publishes: %d\n", array[index].year);
     printf("  | Number of copies: %d\n", array[index].cp);
 }
-
 
 void list_books_later(DATA *array){
     int year, index;
