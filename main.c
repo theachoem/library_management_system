@@ -13,8 +13,7 @@ int main(){
         if(ch == 'Y' || ch == 10 || ch == 'y') load_file(array, "dataTMP.txt");
         else if(ch == 'n' || ch == 'N') load_file(array, "data.txt");
         else goto retry;
-    }
-    else load_file(array, "data.txt");
+    } else load_file(array, "data.txt");
 
     again1:
     printf("\n");
@@ -136,7 +135,7 @@ void add_new_book(DATA *array){
 void modify_book(DATA *array){
     int year = 0, cp;
     char isbn[20], title[50];
-    char author[50];
+    char author[50], author2[50], author3[50];
 
     printf("\n  Enter ISBN: ");
     scanf("%s", &isbn);
@@ -156,8 +155,14 @@ void modify_book(DATA *array){
         case 1:
             printf("\n  Enter new book title: ");
             gets(title); gets(title);
+            year = array[index].year;
+            cp = array[index].cp;
+            strcpy(isbn, array[index].isbn);
+            strcpy(author, array[index].author1);
+            strcpy(author2, array[index].author2);
+            strcpy(author3, array[index].author3);
             remove_data(array, index);
-            insert(array, array[index].isbn, remove_space(title), array[index].author1, array[index].author2, array[index].author3, array[index].year, array[index].cp);
+            insert(array, isbn, remove_space(title), author, author2, author3, year, cp);
         break;
         case 2:
             printf("  Enter new author name: ");
@@ -175,8 +180,14 @@ void modify_book(DATA *array){
                 printf("\n  Enter new ISBN: ");
                 scanf("%s", &isbn);
             } while(!is_valid_isbn(isbn));
+            year = array[index].year;
+            cp = array[index].cp;
+            strcpy(title, array[index].title);
+            strcpy(author, array[index].author1);
+            strcpy(author2, array[index].author2);
+            strcpy(author3, array[index].author3);
             remove_data(array, index);
-            insert(array, isbn, array[index].title, array[index].author1, array[index].author2, array[index].author3, array[index].year, array[index].cp);
+            insert(array, isbn, remove_space(title), author, author2, author3, year, cp);
         break;
         case 4:
             do{
@@ -206,14 +217,13 @@ void delete_book(DATA *array){
     if(array[index].value == 0){
         printf("  ISBN not found!\n");
         return;
-    } else{
+    } else {
         printf("  Are you sure to delete(Y/n): ");
         scanf("%s", &c1);
         if(c1 == 'Y'){
             remove_data(array, index);
             printf("  Index[%d] has been deleted!\n", index);
-        }
-        else return;
+        } else return;
     }
     save_file(array, "dataTMP.txt");
 }

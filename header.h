@@ -110,13 +110,8 @@ void insert(DATA *array, char isbn[20], char title[50], char author1[50], char a
 
 void remove_data(DATA *array, int index){
     int k = 0, i;
-    for(i=0; i<size; i++){
-        if(store_index[i] == hash_string(array[index].title)){
-            k = i; i = size - 1;
-        }
-    }
-    printf("  INDEX : %d", k);
-    array[index].value = 0;
+    for(i=0; i<size; i++) if(store_index[i] == hash_string(array[index].title)) k = i; i = size - 1;
+//    printf("  INDEX : %d", k);
     array[index].value = 0;
     strcpy(array[index].title, "0");
     strcpy(array[index].isbn, "0");
@@ -126,9 +121,7 @@ void remove_data(DATA *array, int index){
     array[index].year = 0;
     array[index].cp = 0;
     size --;
-    for(i=k; i<size; i++){
-        store_index[i] = store_index[i+1];
-    }
+    for(i=k; i<size; i++) store_index[i] = store_index[i+1];
 }
 
 int size_of_hashtable(DATA *array){
