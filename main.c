@@ -13,9 +13,7 @@ int main(){
             load_file(array, "dataTMP.txt");
         }
     }
-
     system("cls");
-
     again1:
     printf("\n");
     printf("  ==============================\n");
@@ -235,7 +233,7 @@ void delete_book(DATA *array){
     } else {
         printf("  Are you sure to delete(Y/n): ");
         scanf("%s", &c1);
-        if(c1 == 'Y'){
+        if(c1 == 'Y' || c1 == 10 || c1 == 'y'){
             remove_data(array, index);
             printf("  Index[%d] has been deleted!\n", index);
         } else return;
@@ -313,7 +311,7 @@ void list_books(DATA *array){
         again:
         printf("  Do you want to detail a book(Y/n): ");
         scanf("%s", &t);
-        if(t == 'Y') search_book_hashing(array);
+        if(t == 'Y' || t == 10 || t == 'y') search_book_hashing(array);
         else if(t == 'n') return;
         else goto again;
     }
@@ -326,6 +324,9 @@ void list_books(DATA *array){
 
 void search_book_hashing(DATA *array){
     char title[50];
+    printf("  ==============================\n");
+    printf("             SEARCH BOOK        \n");
+    printf("  ==============================\n");
     printf("  Enter book title: ");
     gets(title); gets(title);
     int index = hash_string(remove_space(title));

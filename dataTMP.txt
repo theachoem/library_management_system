@@ -8,7 +8,6 @@
 0070311366 Manufacturing_Processes George_Orwell 0 0 2006 1005
 0030350840 Business_Research_Methods Rowling Stephenie_Meyer George_Orwell 2019 1020
 0072294337 Financial_Markets Suzanne_Collins Stephenie_Meyer 0 2008 100
-0026515628 Healthy Rowling Charlotter_Bronete 0 2005 1040
-0123456789 Tom_Teav Buddist Kakvey KHMER 2013 2000
+0026515628 Healthy Rowling 0 Soteah 2005 1040
 0070393605 Project_Management Dan_Brown 0 0 2012 1010
 0070350485 Mechanics Jane_Austen Harper_Lee 0 2004 1000
