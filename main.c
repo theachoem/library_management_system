@@ -7,13 +7,14 @@ int main(){
     DATA *array = init_array();
     char ch;
     if(!if_file_empty("dataTMP.txt")){
-        retry:
         printf("  Do you want to load unsaved data? (Y/n): ");
         scanf("%c", &ch);
-        if(ch == 'Y' || ch == 10 || ch == 'y') load_file(array, "dataTMP.txt");
-        else if(ch == 'n' || ch == 'N') load_file(array, "data.txt");
-        else goto retry;
-    } else load_file(array, "data.txt");
+        if(ch == 'Y' || ch == 10 || ch == 'y'){
+            load_file(array, "dataTMP.txt");
+        }
+    }
+
+    system("cls");
 
     again1:
     printf("\n");
@@ -80,7 +81,7 @@ void save_file(DATA *array, char path[50]){
     FILE *f = fopen(path, "w");
     for (i = 0; i < capacity; i++){
         if (array[i].value != 0){
-            fprintf(f, "%s %s %s %s %s %d %d\n",array[i].isbn, array[i].title, array[i].author1, array[i].author2, array[i].author3, array[i].year, array[i].cp);
+            fprintf(f, "%s %s %s %s %s %d %d\n",array[i].isbn, remove_space(array[i].title), remove_space(array[i].author1), remove_space(array[i].author2), remove_space(array[i].author3), array[i].year, array[i].cp);
         }
     }
 	fclose(f);
@@ -99,9 +100,15 @@ void load_file(DATA *array, char path[50]){
     }
     save_file(array, "dataTMP.txt");
     printf("  DONE!\n");
+    loading();
+    system("cls");
 }
 
 void add_new_book(DATA *array){
+    system("cls");
+    printf("  ==============================\n");
+    printf("           ADD NEW BOOK         \n");
+    printf("  ==============================\n");
     int key, year = 0, cp;
     char isbn[20], title[50];
     char author1[50], author2[50], author3[50];
@@ -133,6 +140,9 @@ void add_new_book(DATA *array){
 }
 
 void modify_book(DATA *array){
+    printf("  ==============================\n");
+    printf("           MODIFY BOOK          \n");
+    printf("  ==============================\n");
     int year = 0, cp;
     char isbn[20], title[50];
     char author[50], author2[50], author3[50];
@@ -206,9 +216,14 @@ void modify_book(DATA *array){
             goto again;
     }
     save_file(array, "dataTMP.txt");
+    system("cls");
+    printf("  Done!");
 }
 
 void delete_book(DATA *array){
+    printf("  ==============================\n");
+    printf("           DELETE BOOK          \n");
+    printf("  ==============================\n");
     char isbn[20], c1;
     printf("\n  Enter ISBN: ");
     scanf("%s", &isbn);
@@ -226,10 +241,15 @@ void delete_book(DATA *array){
         } else return;
     }
     save_file(array, "dataTMP.txt");
+    system("cls");
 }
 
 
 void sort_books(DATA *array){
+    printf("  ==============================\n");
+    printf("            BOOKS LIST          \n");
+    printf("  ==============================\n");
+
     char isbn[20];
     int year, cp;
     char title[50];
@@ -242,43 +262,66 @@ void sort_books(DATA *array){
     printf("  Do you want to sort by ISBN or TITLE? (1 or 2): ");
     scanf("%s",&sorted_check);
     int i,j, index, index1;
-
-    for(i=0; i<size; i++){
-        for(j=i+1; j<size; j++){
-            index = store_index[i];
-            index1 = store_index[j];
-            if(sorted_check == '1'){
-                strcpy(cmp1, array[index].isbn);
-                strcpy(cmp2, array[index1].isbn);
-            }
-            if(sorted_check == '2'){
-                strcpy(cmp1, array[index].title);
-                strcpy(cmp2, array[index1].title);
-            }
-            if(strcmp(cmp1, cmp2)>0 && array[index].value == 1 && array[index].value == 1){
-                store_index[i] = store_index[j];
-                store_index[j] = index;
+    char t;
+    printf("\n  Do you want to save sorted data to a file (restart required)(y/N): ");
+    scanf("%s", &t);
+    if(t == 'y' || t == 'Y'){
+        save_sort(array);
+        loading();
+        free(array);
+        free(store_index);
+        printf("\n  PROGRAM CLOSED!\n");
+        exit(1);
+    }
+    else{
+        for(i=0; i<size; i++){
+            for(j=i+1; j<size; j++){
+                index = store_index[i];
+                index1 = store_index[j];
+                if(sorted_check == '1'){
+                    strcpy(cmp1, array[index].isbn);
+                    strcpy(cmp2, array[index1].isbn);
+                }
+                if(sorted_check == '2'){
+                    strcpy(cmp1, array[index].title);
+                    strcpy(cmp2, array[index1].title);
+                }
+                if(strcmp(cmp1, cmp2)>0 && array[index].value == 1 && array[index].value == 1){
+                    store_index[i] = store_index[j];
+                    store_index[j] = index;
+                }
             }
         }
     }
-    DATA *array2 = array;
-    save_sort(array2);
+    system("cls");
+    list_books(array);
 }
 
 void list_books(DATA *array){
-    int i, index;
-    char tmp[50], t;
-    for (i = 0; i < size; i++){
-        index = store_index[i];
-        if(array[index].value == 1) printf("  ISBN: %s - title: %s, %d\n", array[index].isbn, add_space(array[index].title), array[index].value);
+    if(size != 0){
+        system("cls");
+        int i, index;
+        char tmp[50], t;
+        printf("  ==============================\n");
+        printf("            BOOKS LIST          \n");
+        printf("  ==============================\n");
+        for (i = 0; i < size; i++){
+            index = store_index[i];
+            if(array[index].value == 1) printf("  ISBN: %s - title: %s\n", array[index].isbn, add_space(array[index].title));
+        }
+        printf("\n");
+        again:
+        printf("  Do you want to detail a book(Y/n): ");
+        scanf("%s", &t);
+        if(t == 'Y') search_book_hashing(array);
+        else if(t == 'n') return;
+        else goto again;
     }
-    printf("\n");
-    again:
-    printf("  Do you want to detail a book(Y/n): ");
-    scanf("%s", &t);
-    if(t == 'Y') search_book_hashing(array);
-    else if(t == 'n') return;
-    else goto again;
+    else{
+        printf("  List is empty!\n");
+        loading();
+        system("cls");
+    }
 }
 
 void search_book_hashing(DATA *array){
@@ -300,13 +343,34 @@ void search_book_hashing(DATA *array){
 }
 
 void list_books_later(DATA *array){
-    int year, index;
-    char tmp[50];
-    printf("  Enter released year: ");
-    scanf("%d", &year);
-    for (int i = 0; i < size; i++){
-        index = store_index[i];
-        if (array[index].year >= year && array[index].value == 1)
-            printf("  Year: %d - title: %s\n",array[index].year ,add_space(array[index].title));
+    if(size != 0){
+        system("cls");
+        int year, index;
+        char tmp[50];
+        printf("  Enter released year: ");
+        scanf("%d", &year);
+        printf("  ==============================\n");
+        printf("        BOOK LATER YEAR %d      \n", year);
+        printf("  ==============================\n");
+
+        int k = 0;
+        for (int i = 0; i < size; i++){
+            index = store_index[i];
+            if (array[index].year >= year && array[index].value == 1){
+                printf("  Year: %d - title: %s\n",array[index].year ,add_space(array[index].title));
+                k++;
+            }
+        }
+        if(k == 0){
+            printf("  Book later year %d not found\n\n", year);
+            loading();
+            system("cls");
+        }
+
+    }
+    else{
+        printf("  List is empty!\n");
+        loading();
+        system("cls");
     }
 }

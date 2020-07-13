@@ -3,6 +3,7 @@
 #include<string.h>
 #include<stdbool.h>
 #include <math.h>
+#include <unistd.h>
 
 typedef struct data{
     int value;
@@ -232,4 +233,24 @@ void save_sort(DATA *array){
         }
     }
     save_file(array, "sort_array.txt");
+}
+
+int loading(){
+    const int trigger = 500; // ms
+    const int numDots = 4;
+    const char prompt[] = "  Loading";
+    long long k = 0;
+    while (1 && k < 1) {
+        // Return and clear with spaces, then return and print prompt.
+        printf("\r%*s\r%s", sizeof(prompt) - 1 + numDots, "", prompt);
+        fflush(stdout);
+
+        // Print numDots number of dots, one every trigger milliseconds.
+        for (int i = 0; i < numDots; i++) {
+            usleep(trigger * 1000);
+            fputc('.', stdout);
+            fflush(stdout);
+        }
+        k += 1;
+    }
 }
