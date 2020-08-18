@@ -9,18 +9,21 @@ corresponding to that task. After the chosen task is complete, there should be a
 back to the menu.
 
 LIBRARY MANAGEMENT
-- Add a new book to the library. A book may contain the following info:
+
+```console
+1. Add a new book to the library. A book may contain the following info:
 - ISBN (10 digits)
 - Title
 - Author(s) (max 3 authors)
 - Year of publication
 - Number of copies
 
-- Modify a book (using its ISBN)
-- Delete a book (using its ISBN)
-- List all books in the library
-- Sort the books by their ISBN or by their titles
-- Search for a book by its title using hashing
-- List all books published later than a given date and by a given author
-- Save all data to file
-- Load data from file
+2. Modify a book (using its ISBN)
+3. Delete a book (using its ISBN)
+4. List all books in the library
+5. Sort the books by their ISBN or by their titles
+6. Search for a book by its title using hashing
+7. List all books published later than a given date and by a given author
+8. Save all data to file
+9. Load data from file
+```
