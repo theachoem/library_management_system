@@ -2,13 +2,10 @@
 
 Project assigned by lecture Dona Valy at Niptict (Term3) using C programming (with Hashing).<br>Project score: 27/30
 
-TO DO:
-Choose one of the following to implement as a console application. The application should
-contain a menu which lists all tasks. The user can select any task to perform by inputting a code
+LIBRARY MANAGEMENT:
+The application should contain a menu which lists all tasks. The user can select any task to perform by inputting a code
 corresponding to that task. After the chosen task is complete, there should be a way to return
 back to the menu.
-
-LIBRARY MANAGEMENT
 
 ```console
 1. Add a new book to the library. A book may contain the following info:
