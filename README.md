@@ -5,6 +5,8 @@ Project assigned by lecture Dona Valy at Niptict (Term3) which have written in C
 Assignment:
 The application should contain a menu which lists all tasks. The user can select any task to perform by inputting a code corresponding to that task. After the chosen task is complete, there should be a way to return back to the menu.
 
+My video explanation: <a href="https://drive.google.com/file/d/10nXLN-I-6ZbMltcFZExH5oYKMb6qOveD/view?usp=sharing">on Google Drive</a>
+
 ```console
 1. Add a new book to the library. A book may contain the following info:
 - ISBN (10 digits)
